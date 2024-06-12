@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, SafeAreaView, FlatList, Alert, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useStore } from './store/store';
+import Task from './components/Task';
 
 export default function App() {
   const { task, setTask, taskList, setTaskList, deleteTask } = useStore((state) => ({
@@ -60,12 +61,7 @@ export default function App() {
         <FlatList 
           data={taskList}
           renderItem={({ item, index }) => (
-            <View style={styles.taskContainer}>
-              <Text style={styles.taskText}>{item}</Text>
-              <TouchableOpacity onPress={() => confirmDeleteTask(index)}>
-                <Text style={styles.btnDelete}>x</Text>
-              </TouchableOpacity>
-            </View>
+            <Task item={item} index={index} />
           )}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -100,23 +96,4 @@ const styles = StyleSheet.create({
     padding: 11,
     marginRight: 10,
   },
-  taskContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#333',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  taskText: {
-    color: 'white',
-  },
-  btnDelete: {
-    color: 'white',
-    backgroundColor: 'red',
-    fontSize: 20,
-    paddingVertical: 2,
-    paddingHorizontal: 10,
-    borderRadius: 50,
-  }
 });
