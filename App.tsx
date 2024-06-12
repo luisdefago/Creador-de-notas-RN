@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, View, SafeAreaView, FlatList, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, SafeAreaView, FlatList, Alert, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useStore } from './store/store';
 
 export default function App() {
+  const { taskList, setTaskList, deleteTask } = useStore((state) => ({ 
+    taskList: state.taskList, 
+    setTaskList: state.setTaskList,
+    deleteTask: state.deleteTask
+  }));
+
   const [task, setTask] = useState<string>('');
-  const [tasks, setTasks] = useState<string[]>([]);
 
   const handleAddTask = () => {
     if (task.trim()) {
-      setTasks([...tasks, task.trim()]);
+      setTaskList(task);
       setTask('');
     }
   };
@@ -24,17 +30,12 @@ export default function App() {
         },
         {
           text: "Delete",
-          onPress: () => handleDeleteTask(index),
+          onPress: () => deleteTask(index),
           style: "destructive"
         }
       ],
       { cancelable: true }
     );
-  };
-
-  const handleDeleteTask = (index: number) => {
-    const newTasks = tasks.filter((_, i) => i !== index);
-    setTasks(newTasks);
   };
 
   return (
@@ -47,34 +48,32 @@ export default function App() {
             value={task} 
             onChangeText={setTask}
           />
-            <Button 
-              mode="contained-tonal" 
-              onPress={handleAddTask}
-              disabled={task.length === 0}
-              style={{ backgroundColor: task.length > 0 ? '#708090' : '#C0C0C0' }}
-            >
-              Create
-            </Button>
+          <Button 
+            mode="contained-tonal" 
+            onPress={handleAddTask}
+            disabled={task.length === 0}
+            style={{ backgroundColor: task.length > 0 ? '#708090' : '#C0C0C0' }}
+          >
+            Create
+          </Button>
         </View>
         <FlatList 
-          data={tasks}
+          data={taskList}
           renderItem={({ item, index }) => (
             <View style={styles.taskContainer}>
               <Text style={styles.taskText}>{item}</Text>
               <TouchableOpacity onPress={() => confirmDeleteTask(index)}>
-                <Text style={styles.btnDelete}>
-                  x
-                </Text>
+                <Text style={styles.btnDelete}>x</Text>
               </TouchableOpacity>
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
         />
-
       </View>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {
