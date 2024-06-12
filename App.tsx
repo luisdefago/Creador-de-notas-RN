@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, SafeAreaView, FlatList, Alert, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useStore } from './store/store';
 
 export default function App() {
-  const { taskList, setTaskList, deleteTask } = useStore((state) => ({ 
-    taskList: state.taskList, 
+  const { task, setTask, taskList, setTaskList, deleteTask } = useStore((state) => ({
+    task: state.task,
+    setTask: state.setTask,
+    taskList: state.taskList,
     setTaskList: state.setTaskList,
     deleteTask: state.deleteTask
   }));
-
-  const [task, setTask] = useState<string>('');
 
   const handleAddTask = () => {
     if (task.trim()) {
@@ -73,7 +73,6 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   safeArea: {
